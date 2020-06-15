@@ -1,43 +1,19 @@
-type List = {
-  level: number;
-  type: string;
-  token: string;
-  children: List[] | Operator[] | Numerical[];
-};
-
-type Operator = {
-  level: number;
-  type: string;
-  token: string;
-};
-
-type Numerical = {
-  position: number;
-  level: number;
-  type: string;
-  token: string;
-};
-
-export function parse(
-  tokens: string[],
-  remaining: number = tokens.length,
-): any {
+export function parse(tokens: string[]): any {
   if (tokens.length >= 1) {
-    let head: string = String(tokens.shift());
-    let tail = tokens;
+    let token: string = String(tokens.shift());
 
-    if (head == "(") {
+    if (token == "(") {
       // List starts
-      return [parse(tail, tail.length)];
-    } else if (head == ")") {
+      return [parse(tokens)];
+    } else if (token == ")") {
       // List ends
       return null;
-    } else if (["+", "-", "*", "/", "^"].includes(head)) {
+    } else if (["+", "-", "*", "/", "^"].includes(token)) {
       // Operator
-      return { type: "operator", token: head, next: parse(tail) };
+      return { type: "operator", token: token, next: parse(tokens) };
     } else {
       // Number
-      return { type: "number", token: head, next: parse(tail) };
+      return { type: "number", token: token, next: parse(tokens) };
     }
   } else {
     return null;
