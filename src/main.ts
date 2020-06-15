@@ -7,9 +7,9 @@ import {
   warningLog,
 } from "https://deno.land/x/colorlog/mod.ts";
 
-import { tokenize } from "./lib/tokenizer.ts"
+import { tokenize } from "./lib/tokenizer.ts";
 import { validate } from "./lib/validator.ts";
-import { parse } from "./lib/parser.ts"
+import { parse } from "./lib/parser.ts";
 
 // APP
 function add(a: number, b: number) {
@@ -27,8 +27,7 @@ let keywords = {
   "print": console.log,
 };
 
-let sample = `+ 1 2`;
-
+let sample = `1`;
 
 validate(tokenize(sample), true);
 console.log("\n");

@@ -12,48 +12,34 @@ type Operator = {
 };
 
 type Numerical = {
+  position: number;
   level: number;
   type: string;
   token: string;
 };
 
-export function parse(tokens: string[]): List[] {
-  let level = 0;
-  let result: any[] = [];
-  let current: any[] = [];
-  let counter = 0;
-  let total = tokens.length;
+export function parse(
+  tokens: string[],
+  remaining: number = tokens.length,
+): any {
+  if (tokens.length >= 1) {
+    let head: string = String(tokens.shift());
+    let tail = tokens;
 
-  tokens.forEach((token) => {
-    counter += 1;
-    if (token == "(") {
-      if (current != []) {
-        result.push(current);
-        current = [];
-      }
-      level += 1;
-    } else if (["+", "-", "*", "/", "^"].includes(token)) {
-      let child: Operator = {
-        level: level,
-        type: "operator",
-        token: token,
-      };
-      current.push(child);
-    } else if (token == ")") {
-      level -= 1;
-      result.push(current);
+    if (head == "(") {
+      // List starts
+      return [parse(tail, tail.length)];
+    } else if (head == ")") {
+      // List ends
+      return null;
+    } else if (["+", "-", "*", "/", "^"].includes(head)) {
+      // Operator
+      return { type: "operator", token: head, next: parse(tail) };
     } else {
-      let newChild: Numerical = {
-        level: level,
-        type: "number",
-        token: token,
-      };
-      current.push(newChild);
+      // Number
+      return { type: "number", token: head, next: parse(tail) };
     }
-    // console.log(`${counter} de ${total}.`);
-    if (counter == total) { // When there's no parenthesis.
-      result.push(current);
-    }
-  });
-  return result;
+  } else {
+    return null;
+  }
 }

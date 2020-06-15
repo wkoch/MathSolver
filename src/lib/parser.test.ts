@@ -18,36 +18,60 @@ import { parse } from "./parser.ts";
 let data = [
   {
     code: "1",
-    result: [{ level: 0, type: "number", token: "1" }],
+    result: { type: "number", token: "1", next: null },
   },
-  // {
-  //   code: "(1)",
-  //   result: [{ level: 1, type: "number", token: "1" }],
-  // },
-  // {
-  //   code: "(+ 1.2 22.36)",
-  //   result: [
-  //       { level: 1, type: "operator", token: "+" },
-  //       { level: 1, type: "number", token: "1.2" },
-  //       { level: 1, type: "number", token: "22.36" },
-  //   ],
-  // },
-  // {
-  //   code: "(+ 10 (- 20 (* 3 2)))",
-  //   result: [
-  //       { level: 1, type: "operator", token: "+" },
-  //       { level: 1, type: "number", token: "10" },
-  //       [
-  //         { level: 1, type: "operator", token: "-" },
-  //         { level: 1, type: "number", token: "20" },
-  //         [
-  //           { level: 1, type: "operator", token: "*" },
-  //           { level: 1, type: "number", token: "3" },
-  //           { level: 1, type: "number", token: "2" }
-  //         ]
-  //       ]
-  //   ],
-  // },
+  {
+    code: "(1)",
+    result: [{ type: "number", token: "1", next: null }],
+  },
+  {
+    code: "(+ 1.2 22.36)",
+    result: [
+      {
+        type: "operator",
+        token: "+",
+        next: {
+          type: "number",
+          token: "1.2",
+          next: { type: "number", token: "22.36", next: null },
+        },
+      },
+    ],
+  },
+  {
+    code: "(+ 10 (- 20 (* 3 2)))",
+    result: [
+      {
+        type: "operator",
+        token: "+",
+        next: {
+          type: "number",
+          token: "10",
+          next: [
+            {
+              type: "operator",
+              token: "-",
+              next: {
+                type: "number",
+                token: "20",
+                next: [
+                  {
+                    type: "operator",
+                    token: "*",
+                    next: {
+                      type: "number",
+                      token: "3",
+                      next: { type: "number", token: "2", next: null },
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
 ];
 
 // Test Code
